@@ -22,7 +22,8 @@ class CustomElevatedButton extends StatelessWidget {
       this.radius,
       this.suffixIcon,
       required this.label,
-      required this.onTap});
+      required this.onTap,
+      required bool isLoading});
 
   @override
   Widget build(BuildContext context) {

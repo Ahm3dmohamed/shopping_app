@@ -3,6 +3,7 @@ import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/font_manager.dart';
 import 'package:ecommerce_app/core/resources/styles_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
+import 'package:ecommerce_app/core/routes_manager/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,13 +34,23 @@ class ProfileTabState extends State<ProfileTab> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SvgPicture.asset(
-                SvgAssets.routeLogo,
-                height: AppSize.s40,
-                colorFilter: ColorFilter.mode(
-                  ColorManager.primary,
-                  BlendMode.srcIn,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SvgPicture.asset(
+                    SvgAssets.routeLogo,
+                    height: AppSize.s40,
+                    colorFilter: ColorFilter.mode(
+                      ColorManager.primary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, Routes.signUpRoute);
+                      },
+                      icon: Icon(Icons.logout)),
+                ],
               ),
               SizedBox(height: AppSize.s20.h),
               Text(

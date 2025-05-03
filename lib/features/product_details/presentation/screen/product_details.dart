@@ -118,6 +118,7 @@ class ProductDetails extends StatelessWidget {
                 ),
                 Expanded(
                   child: CustomElevatedButton(
+                    isLoading: false,
                     label: 'Add to cart',
                     onTap: () {},
                     prefixIcon: Icon(

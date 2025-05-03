@@ -1,6 +1,13 @@
 import 'dart:async';
+import 'package:ecommerce_app/core/api/api_manager.dart';
+import 'package:ecommerce_app/core/resources/enum.dart';
+import 'package:ecommerce_app/features/main_layout/home/data/datasource/remote/home_category_remote_ds_impl.dart';
+import 'package:ecommerce_app/features/main_layout/home/data/repository/home_category_impl.dart';
+import 'package:ecommerce_app/features/main_layout/home/domain/usecases/home_categories_usecase.dart';
+import 'package:ecommerce_app/features/main_layout/home/presentation/bloc/home_categories_bloc.dart';
 import 'package:ecommerce_app/features/main_layout/home/presentation/widgets/custom_category_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/resources/assets_manager.dart';
@@ -46,74 +53,59 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomAdsWidget(
-            adsImages: adsImages,
-            currentIndex: _currentIndex,
-            timer: _timer,
-          ),
-          Column(
-            children: [
-              CustomSectionBar(sectionNname: 'Categories', function: () {}),
-              SizedBox(
-                height: 270.h,
-                child: GridView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return const CustomCategoryWidget();
-                  },
-                  itemCount: 20,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
+    return BlocProvider(
+        create: (context) => HomeCategoriesBloc(
+              HomeCategoriesUsecase(
+                  HomeCategoryImpl(HomeCategoryRemoteDsImpl(ApiManager()))),
+            )..add(GetHomeCategoriesEvent()),
+        child: BlocConsumer<HomeCategoriesBloc, HomeCategoriesState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state.requestState == RequestState.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state.categories?.data == null ||
+                  state.categories!.data!.isEmpty) {
+                return const Center(child: Text("No categories available"));
+              }
+
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CustomAdsWidget(
+                      adsImages: adsImages,
+                      currentIndex: _currentIndex,
+                      timer: _timer,
+                    ),
+                    Column(
+                      children: [
+                        CustomSectionBar(
+                          sectionNname: 'Categories',
+                          function: () {},
+                        ),
+                        SizedBox(
+                          height: 272.h,
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: state.categories!.data!.length,
+                            itemBuilder: (context, index) {
+                              return CustomCategoryWidget(
+                                categoryModel: state.categories!.data![index],
+                              );
+                            },
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.h),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-              // SizedBox(height: 12.h),
-              // CustomSectionBar(sectionNname: 'Brands', function: () {}),
-              // SizedBox(
-              //   height: 270.h,
-              //   child: GridView.builder(
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (context, index) {
-              //       return const CustomBrandWidget();
-              //     },
-              //     itemCount: 20,
-              //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 2,
-              //     ),
-              //   ),
-              // ),
-              // CustomSectionBar(
-              //   sectionNname: 'Most Selling Products',
-              //   function: () {},
-              // ),
-              // SizedBox(
-              //   child: SizedBox(
-              //     height: 360.h,
-              //     child: ListView.builder(
-              //       scrollDirection: Axis.horizontal,
-              //       itemBuilder: (context, index) {
-              //         return const ProductCard(
-              //           title: "Nike Air Jordon",
-              //           description:
-              //               "Nike is a multinational corporation that designs, develops, and sells athletic footwear ,apparel, and accessories",
-              //           rating: 4.5,
-              //           price: 1100,
-              //           priceBeforeDiscound: 1500,
-              //           image: ImageAssets.categoryHomeImage,
-              //         );
-              //       },
-              //       itemCount: 20,
-              //     ),
-              //   ),
-              // ),
-              SizedBox(height: 12.h),
-            ],
-          )
-        ],
-      ),
-    );
+              );
+            }));
   }
 }

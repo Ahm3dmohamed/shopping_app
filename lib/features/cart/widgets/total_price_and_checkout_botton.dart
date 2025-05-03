@@ -47,6 +47,7 @@ class TotalPriceAndCheckoutBotton extends StatelessWidget {
         // Checkout button ================================
         Expanded(
           child: CustomElevatedButton(
+            isLoading: false,
             label: 'Check Out',
             onTap: checkoutButtonOnTap,
             suffixIcon: Icon(

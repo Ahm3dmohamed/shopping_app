@@ -4,6 +4,9 @@ import 'package:ecommerce_app/features/main_layout/home/data/datasource/remote/h
 import 'package:ecommerce_app/features/main_layout/home/data/model/category_model/category_model.dart';
 import 'package:ecommerce_app/features/main_layout/home/domain/repository/home_repo.dart';
 
+import 'package:injectable/injectable.dart';
+
+@Injectable(as: HomeRepo)
 class HomeCategoryImpl implements HomeRepo {
   final HomeCategoryRemoteDs homeDs;
 

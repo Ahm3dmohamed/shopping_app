@@ -1,10 +1,15 @@
 import 'package:ecommerce_app/core/resources/color_manager.dart';
 import 'package:ecommerce_app/core/resources/values_manager.dart';
 import 'package:ecommerce_app/features/main_layout/categories/presentation/widgets/category_item.dart';
+import 'package:ecommerce_app/features/main_layout/home/data/model/category_model/category_model.dart';
+import 'package:ecommerce_app/features/main_layout/home/data/model/category_model/datum.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesList extends StatefulWidget {
-  const CategoriesList({super.key});
+  List<Datum>? categoryModel;
+  Function onClick;
+  CategoriesList(
+      {required this.categoryModel, required this.onClick, super.key});
 
   @override
   State<CategoriesList> createState() => _CategoriesListState();
@@ -45,9 +50,12 @@ class _CategoriesListState extends State<CategoriesList> {
           bottomLeft: Radius.circular(AppSize.s12),
         ),
         child: ListView.builder(
-          itemCount: 20,
-          itemBuilder: (context, index) => CategoryItem(index,
-              "Laptops & Electronics", selectedIndex == index, onItemClick),
+          itemCount: widget.categoryModel?.length ?? 0,
+          itemBuilder: (context, index) => CategoryItem(
+              index,
+              widget.categoryModel?[index].name ?? "",
+              selectedIndex == index,
+              onItemClick),
         ),
       ),
     ));
@@ -57,6 +65,7 @@ class _CategoriesListState extends State<CategoriesList> {
   onItemClick(int index) {
     setState(() {
       selectedIndex = index;
+      widget.onClick(widget.categoryModel?[index].id);
     });
   }
 }

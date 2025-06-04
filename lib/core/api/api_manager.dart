@@ -1,34 +1,45 @@
+// lib/core/api/api_manager.dart
+
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 
-const String baseUrl =
-    "https://ecommerce.routemisr.com/"; // Corrected typo and added trailing slash
+const String baseUrl = "https://ecommerce.routemisr.com/";
 
+// @lazySingleton
 class ApiManager {
   late Dio dio;
+
   ApiManager() {
     dio = Dio();
+    dio.interceptors.add(LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+    ));
   }
 
-  Future<Response> getData(
-      {required String endPoints,
-      Map<String, dynamic>? param,
-      Map<String, dynamic>? headers}) async {
+  Future<Response> getData({
+    required String endPoints,
+    Map<String, dynamic>? param,
+    Map<String, dynamic>? headers,
+  }) async {
     return dio.get(
-      baseUrl + endPoints, // Corrected variable name
+      endPoints,
       options: Options(headers: headers),
       queryParameters: param,
     );
   }
 
-  Future<Response> postData(
-      {required String endPoints,
-      Map<String, dynamic>? param,
-      Map<String, dynamic>? body}) async {
+  Future<Response> postData({
+    required String endPoints,
+    Map<String, dynamic>? param,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? headers,
+  }) async {
     return dio.post(
-      // Changed from `get` to `post` for POST requests
-      baseUrl + endPoints, // Corrected variable name
-      options: Options(headers: body),
+      baseUrl + endPoints,
+      data: body,
       queryParameters: param,
+      options: Options(headers: headers),
     );
   }
 }

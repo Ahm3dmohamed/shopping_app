@@ -9,7 +9,7 @@ import 'package:ecommerce_app/features/main_layout/home/presentation/widgets/cus
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:loader_overlay/loader_overlay.dart';
 import '../../../../core/resources/assets_manager.dart';
 import 'widgets/custom_ads_widget.dart';
 import 'widgets/custom_section_bar.dart';
@@ -53,59 +53,66 @@ class _HomeTabState extends State<HomeTab> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => HomeCategoriesBloc(
-              HomeCategoriesUsecase(
-                  HomeCategoryImpl(HomeCategoryRemoteDsImpl(ApiManager()))),
-            )..add(GetHomeCategoriesEvent()),
-        child: BlocConsumer<HomeCategoriesBloc, HomeCategoriesState>(
-            listener: (context, state) {},
-            builder: (context, state) {
-              if (state.requestState == RequestState.loading) {
-                return const Center(child: CircularProgressIndicator());
-              }
+    return LoaderOverlay(
+      child: BlocProvider(
+          create: (context) => HomeCategoriesBloc(
+                HomeCategoriesUsecase(
+                    HomeCategoryImpl(HomeCategoryRemoteDsImpl(ApiManager()))),
+              )..add(GetHomeCategoriesEvent()),
+          child: BlocConsumer<HomeCategoriesBloc, HomeCategoriesState>(
+              listener: (context, state) {
+            if (state.requestState == RequestState.loading) {
+              context.loaderOverlay.show();
+            } else {
+              context.loaderOverlay.hide();
+            }
+          }, builder: (context, state) {
+            if (state.requestState == RequestState.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-              if (state.categories?.data == null ||
-                  state.categories!.data!.isEmpty) {
-                return const Center(child: Text("No categories available"));
-              }
+            if (state.categories?.data == null ||
+                state.categories!.data!.isEmpty) {
+              return const Center(child: Text(" categories are Loading"));
+            }
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    CustomAdsWidget(
-                      adsImages: adsImages,
-                      currentIndex: _currentIndex,
-                      timer: _timer,
-                    ),
-                    Column(
-                      children: [
-                        CustomSectionBar(
-                          sectionNname: 'Categories',
-                          function: () {},
-                        ),
-                        SizedBox(
-                          height: 272.h,
-                          child: GridView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: state.categories!.data!.length,
-                            itemBuilder: (context, index) {
-                              return CustomCategoryWidget(
-                                categoryModel: state.categories!.data![index],
-                              );
-                            },
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                            ),
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomAdsWidget(
+                    adsImages: adsImages,
+                    currentIndex: _currentIndex,
+                    timer: _timer,
+                  ),
+                  Column(
+                    children: [
+                      CustomSectionBar(
+                        sectionNname: 'Categories',
+                        function: () {},
+                      ),
+                      SizedBox(
+                        height: 272.h,
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.categories!.data!.length,
+                          itemBuilder: (context, index) {
+                            return CustomCategoryWidget(
+                              categoryModel: state.categories!.data![index],
+                            );
+                          },
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
                           ),
                         ),
-                        SizedBox(height: 12.h),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }));
+                      ),
+                      SizedBox(height: 12.h),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          })),
+    );
   }
 }

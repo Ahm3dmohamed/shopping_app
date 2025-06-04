@@ -4,7 +4,9 @@ import 'package:ecommerce_app/features/auth/domain/use_cases/login_usecase.dart'
 import 'package:ecommerce_app/features/auth/domain/use_cases/sign_up_usecase.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_event.dart';
 import 'package:ecommerce_app/features/auth/presentation/bloc/auth_state.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginUsecase loginUsecase;
   final SignUpUsecase signUpUsecase;

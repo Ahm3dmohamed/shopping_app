@@ -2,7 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:ecommerce_app/core/exceptions/failure.dart';
 import 'package:ecommerce_app/features/auth/domain/repository/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class LoginUsecase {
   AuthRepo authRepo;
   LoginUsecase(this.authRepo);

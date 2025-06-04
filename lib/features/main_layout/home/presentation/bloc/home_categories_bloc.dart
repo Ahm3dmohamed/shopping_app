@@ -4,10 +4,13 @@ import 'package:ecommerce_app/core/resources/enum.dart';
 import 'package:ecommerce_app/features/main_layout/home/data/model/category_model/category_model.dart';
 import 'package:ecommerce_app/features/main_layout/home/domain/usecases/home_categories_usecase.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
+// import 'package:injectable/injectable.dart';
 
 part 'home_categories_event.dart';
 part 'home_categories_state.dart';
 
+@injectable
 class HomeCategoriesBloc extends Bloc<HomeEvent, HomeCategoriesState> {
   final HomeCategoriesUsecase homeCategoriesUsecase;
 

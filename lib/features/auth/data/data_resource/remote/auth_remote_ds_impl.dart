@@ -4,7 +4,9 @@ import 'package:ecommerce_app/core/cache/shared_preferance.dart';
 import 'package:ecommerce_app/features/auth/data/data_resource/remote/auth_remote_ds.dart';
 import 'package:ecommerce_app/features/auth/domain/entity/signup_data.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
+@Injectable(as: AuthRemoteDs)
 class AuthRemoteDsImpl implements AuthRemoteDs {
   final dio = Dio();
 
